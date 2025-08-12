@@ -1,0 +1,7 @@
+2025-08-04 14:24:05,000 - __main__ - ERROR - Test execution failed: 'PlaywrightContextManager' object has no attribute 'chromium'
+Traceback (most recent call last):
+  File "e:\automation-test\p-lending\lending-fe\Retail-Paymenthub.py", line 197, in main
+    browser = await setup_browser()
+  File "e:\automation-test\p-lending\lending-fe\Retail-Paymenthub.py", line 182, in setup_browser
+    return await async_playwright().chromium.launch(
+AttributeError: 'PlaywrightContextManager' object has no attribute 'chromium'

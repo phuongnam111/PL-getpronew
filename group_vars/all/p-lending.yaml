@@ -1,0 +1,7 @@
+---
+schedule_name: "[LENDING] Daily"
+schedule_cron: "0 */5 * * *"
+schedule_enabled: true
+schedule_timezone: "Asia/Ho_Chi_Minh"
+schedule_gitlab_branch: main
+schedule_timeout: 30

@@ -1,0 +1,7 @@
+---
+schedule_name: "[ZALO] Daily"
+schedule_cron: "0 9 * * *"
+schedule_enabled: false
+schedule_timezone: "Asia/Ho_Chi_Minh"
+schedule_gitlab_branch: main
+schedule_timeout: 30

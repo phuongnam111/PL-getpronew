@@ -1,0 +1,42 @@
+stages:
+  - build
+  - config
+{% for folder in folders -%}
+{% if folder in changed_projects %}
+build-image-{{ folder }}:
+  stage: build
+  tags:
+    - auto-test-shell
+  rules:
+    - changes:
+        - {{ folder }}/**/*
+  before_script:
+    - cd {{ folder }}
+    - echo "$CI_REGISTRY_PASSWORD" | docker login $CI_REGISTRY --username $CI_REGISTRY_USER --password-stdin
+    - docker pull $CONTAINER_REGISTRY/$CI_PROJECT_NAME-{{ folder }}:latest || true
+  script:
+    - docker buildx build
+      --rm --cache-from $CONTAINER_REGISTRY/$CI_PROJECT_NAME-{{ folder }}:latest
+      --file $CI_PROJECT_DIR/{{ folder }}/Dockerfile
+      --tag $CONTAINER_REGISTRY/$CI_PROJECT_NAME-{{ folder }}:$CI_COMMIT_SHORT_SHA
+      --tag $CONTAINER_REGISTRY/$CI_PROJECT_NAME-{{ folder }}:latest
+      --push $CI_PROJECT_DIR/{{ folder }}
+{% endif %}
+{% if "p-" in folder and (folder in changed_projects or "group_vars" in changed_folders or "roles" in changed_folders) %}
+config-schedule-{{ folder }}:
+  stage: config
+  image: registry.citigo.net/platform/platform-ansible:1.0.0
+  tags:
+    - auto-test-docker
+{% if folder in changed_projects %}
+  needs: ['build-image-{{ folder }}']
+{% endif %}
+  rules:
+    - changes:
+        - {{ folder }}/**/*
+        - roles/config_schedule/**/*
+        - group_vars/**/*
+  script:
+    - ansible-playbook playbook.yml -t config_schedule -i inventory.ini --extra-vars "project={{ folder }} change_image={% if folder in changed_projects %}true{% else %}false{% endif %}"
+{% endif %}
+{% endfor %}

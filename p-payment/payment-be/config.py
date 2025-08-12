@@ -1,0 +1,13 @@
+class ProdConfig:
+    generate_qr_url = 'https://payment.kiotviet.vn/api-sdk/v1.0.0/generate-qr'
+
+class Paramconfig:
+    authorization = 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6IndYYSJ9.eyJpc3MiOiJrdnNzand0Iiwic3ViIjo2OTkwOTYsImlhdCI6MTc0ODUxODk2NywiZXhwIjoxNzUwOTM4MTY3LCJwcmVmZXJyZWRfdXNlcm5hbWUiOjEsInJvbGVzIjpbIlVzZXIiXSwia3Zzb3VyY2UiOiJSZXRhaWwiLCJrdnVzZXRmYSI6MCwia3Z3YWl0b3RwIjowLCJrdnNlcyI6Ijk4ZDJkODJiNjhiMzQ4ZWM5NThlNDBiMDZhNjJhNTc5Iiwia3Z1aWQiOjY5OTA5Niwia3ZsYW5nIjoidmktVk4iLCJrdnV0eXBlIjowLCJrdnVsaW1pdCI6IkZhbHNlIiwia3Z1YWRtaW4iOiJUcnVlIiwia3Z1YWN0IjoiVHJ1ZSIsImt2dWxpbWl0dHJhbnMiOiJGYWxzZSIsImt2dXNob3dzdW0iOiJUcnVlIiwia3ZiaSI6IkZhbHNlIiwia3ZiaWQiOjI5ODQ2NSwia3ZyaW5kaWQiOjcsImt2cmNvZGUiOiJsaW5oaW50ZXJuYWxjaGVjayIsImt2cmlkIjo1MDAyNTczOTEsImt2dXJpZCI6NTAwMjU3MzkxLCJrdnJnaWQiOjMsInBlcm1zIjoiIn0.E67jud1pyWvZaQYHwilyfZn8RaGZvWE8YUsq9z9-zUIN3AgXAbIjzeCRx8JYsKKjlG_ivOqltkCWrsOehJYpru7QQ0l3nSFMgv7QhXMXI1HSlBahlMDjET6sUQAk66MK_P89yAKekmhsMSK39n4SGxi49pbuGHNSDwAOnFQzmqhlv6wzTWcE63IJjyXQ_iLQL1-yKLYOlkV1tMavTDY82kI3Sx83i0JAwfC864w6VUhKskVSGyMruxppRRa5d3TsgFKlSwxWf3oDLv_v7ORK9gtNgQv6Y5imu1kuitcvHG7C9qlECUnLbZbY6wvu9oZe0FP86gS7MWotT5sLTuznkQ'
+    apikey = 'sIbtyMDVoXPClsV0CIG7bLrL5ep2c1EDR4wBP7TfHhRpEkI8'
+    payment_id = '029273641'
+    payment_code = 'VIB'
+    amount = 1000
+    uuid = '1'
+    merchant_code = 'retail'
+    merchant_id = '500257391'
+    content = 'runner by automation'

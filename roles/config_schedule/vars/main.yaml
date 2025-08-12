@@ -1,0 +1,6 @@
+---
+gitlab_token: "{{ lookup('env', 'GITLAB_PROJECT_TOKEN') }}"
+gitlab_api_url: https://gitlab.citigo.com.vn/api/v4
+gitlab_project_id: "{{ lookup('env', 'CI_PROJECT_ID') }}"
+current_schedule: "{{ lookup('file', 'group_vars/all/{{ project }}.yaml') | from_yaml }}"
+image_tag: "{{ lookup('env', 'CI_COMMIT_SHORT_SHA') }}"

@@ -1,0 +1,20 @@
+# Test runner execution order
+invoice-be:
+  - inv_acc_create.py    
+  - inv_acc_get.py      
+  - inv_acc_sync_get.py
+  - inv_acc_template_get.py
+  - inv_pos_publish.py
+  - inv_pos_publish_2.py
+  - inv_publish_batch.py
+  - inv_publish_draft_batch.py
+
+invoice-fe:
+  - fnb_inv_misa.py
+  - fnb_inv_viettel.py
+  - fnb_inv_vnpt.py
+  - retail_inv_misa.py
+  - retail_inv_viettel.py
+  - retail_inv_vnpt.py
+  - salon_inv_publish.py
+  - hotel_inv_publish.py

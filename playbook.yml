@@ -1,0 +1,9 @@
+---
+- name: Config schedule
+  hosts: all
+  gather_facts: false
+  become: true
+  roles:
+    - role: config_schedule
+      tags: config_schedule
+      when: inventory_hostname == 'local_runner'

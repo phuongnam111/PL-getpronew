@@ -1,0 +1,48 @@
+---
+- name: "[create_schedule] Create new schedule `{{ current_schedule.schedule_name }}`"
+  uri:
+    url: "{{ gitlab_api_url }}/projects/{{ gitlab_project_id }}/pipeline_schedules"
+    method: POST
+    headers:
+      PRIVATE-TOKEN: "{{ gitlab_token }}"
+    body_format: json
+    body: >
+      {
+        "description": "{{ current_schedule.schedule_name }}",
+        "cron": "{{ current_schedule.schedule_cron }}",
+        "active": {{ current_schedule.schedule_enabled }},
+        "cron_timezone": "{{ current_schedule.schedule_timezone }}",
+        "ref": "{{ current_schedule.schedule_gitlab_branch }}"
+      }
+    status_code: 201
+  register: created_result
+
+- name: "[create_schedule] Create PROJECT env for schedule `{{ current_schedule.schedule_name }}`"
+  uri:
+    url: "{{ gitlab_api_url }}/projects/{{ gitlab_project_id }}/pipeline_schedules/{{ created_result.json.id }}/variables"
+    method: POST
+    headers:
+      PRIVATE-TOKEN: "{{ gitlab_token }}"
+    body_format: json
+    body: >
+      {
+        "variable_type": "env_var",
+        "key": "PROJECT",
+        "value": "{{ project }}"
+      }
+    status_code: 201
+
+- name: "[create_schedule] Create IMAGE_TAG env for schedule `{{ current_schedule.schedule_name }}`"
+  uri:
+    url: "{{ gitlab_api_url }}/projects/{{ gitlab_project_id }}/pipeline_schedules/{{ created_result.json.id }}/variables"
+    method: POST
+    headers:
+      PRIVATE-TOKEN: "{{ gitlab_token }}"
+    body_format: json
+    body: >
+      {
+        "variable_type": "env_var",
+        "key": "IMAGE_TAG",
+        "value": "{{ image_tag }}"
+      }
+    status_code: 201

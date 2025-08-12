@@ -1,0 +1,16 @@
+- name: "Load all existing schedules from Gitlab"
+  uri:
+    url: "{{ gitlab_api_url }}/projects/{{ gitlab_project_id }}/pipeline_schedules"
+    method: GET
+    headers:
+      PRIVATE-TOKEN: "{{ gitlab_token }}"
+    return_content: yes
+  register: existing_schedules
+
+- name: "Process create schedule from configs"
+  when: "current_schedule.schedule_name not in (existing_schedules.json | map(attribute='description') | list)"
+  include_tasks: create_schedule.yaml
+
+- name: "Process update schedule from configs"
+  when: "current_schedule.schedule_name in (existing_schedules.json | map(attribute='description') | list)"
+  include_tasks: update_schedule.yaml

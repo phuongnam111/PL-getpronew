@@ -1,0 +1,34 @@
+- name: "[update_schedule] Update schedule `{{ current_schedule.schedule_name }}`"
+  uri:
+    url: "{{ gitlab_api_url }}/projects/{{ gitlab_project_id }}/pipeline_schedules/{{ existing_schedules.json | selectattr('description', 'equalto', current_schedule.schedule_name ) | map(attribute='id') | first }}"
+    method: PUT
+    headers:
+      PRIVATE-TOKEN: "{{ gitlab_token }}"
+    body_format: json
+    body: >
+      {
+        "description": "{{ current_schedule.schedule_name }}",
+        "cron": "{{ current_schedule.schedule_cron }}",
+        "active": {{ current_schedule.schedule_enabled }},
+        "cron_timezone": "{{ current_schedule.schedule_timezone }}",
+        "ref": "{{ current_schedule.schedule_gitlab_branch }}"
+      }
+    status_code: 200
+
+- name: "[update_schedule] Update IMAGE_TAG env for schedule `{{ current_schedule.schedule_name }}`"
+  uri:
+    url: "{{ gitlab_api_url }}/projects/{{ gitlab_project_id }}/pipeline_schedules/{{ existing_schedules.json | selectattr('description', 'equalto', current_schedule.schedule_name ) | map(attribute='id') | first }}/variables/IMAGE_TAG"
+    method: PUT
+    headers:
+      PRIVATE-TOKEN: "{{ gitlab_token }}"
+    body_format: json
+    body: >
+      {
+        "variable_type": "env_var",
+        "key": "IMAGE_TAG",
+        "value": "{{ image_tag }}"
+      }
+    status_code: 200
+  when:
+    - change_image is defined
+    - change_image | bool

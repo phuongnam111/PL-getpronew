@@ -1,0 +1,7 @@
+---
+schedule_name: "[INVOICE] Daily"
+schedule_cron: "*/30 * * * *"
+schedule_enabled: false
+schedule_timezone: "Asia/Ho_Chi_Minh"
+schedule_gitlab_branch: main
+schedule_timeout: 30

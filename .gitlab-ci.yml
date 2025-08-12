@@ -1,0 +1,82 @@
+stages:
+  - prepare
+  - triggers
+  - test
+
+generate-ci:
+  stage: prepare
+  tags:
+    - auto-test-docker
+  image:
+    name: docker.citigo.com.vn/templates/schedule-generate-ci:v1
+    entrypoint: [""]
+  before_script: |
+    if [ "$CI_COMMIT_BEFORE_SHA" = '0000000000000000000000000000000000000000' ]; then
+      echo -e "\033[0;31m[WARN] Last run commit id not found, checking last 10 commits\033[0m"
+      COMMIT_RANGE="HEAD~10"
+    else
+      echo -e "\033[0;33m[INFO] Checking changes since ${CI_COMMIT_BEFORE_SHA}\033[0m"
+      COMMIT_RANGE="${CI_COMMIT_BEFORE_SHA}"
+    fi
+
+    export CHANGED_FOLDERS=$(git --no-pager diff --name-status $COMMIT_RANGE | \
+        awk '$1 != "D" {print $2}' | \
+        xargs -I {} dirname {} | \
+        awk -F'/' '{print $1}' | \
+        grep -v '^.$' | sort -u | tr '\n' ' ')
+    
+    echo -e "\033[0;33m[INFO] Changed folders: ${CHANGED_FOLDERS}\033[0m"
+  script: |
+    python -u generate-ci-config.py
+  artifacts:
+    paths:
+      - generated-config.yml
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+      changes:
+        - group_vars/**/*
+        - roles/config_schedule/**/*
+        - p-*/**/*
+
+trigger-pipeline:
+  stage: triggers
+  trigger:
+    include:
+      - artifact: generated-config.yml
+        job: generate-ci
+    strategy: depend
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+      changes:
+        - group_vars/**/*
+        - roles/config_schedule/**/*
+        - p-*/**/*
+
+run-test:
+  stage: test
+  variables:
+    SCREENSHOT_DIR: "/app/snapshot"
+  before_script:
+    - mkdir -p screenshots
+    - chmod -R 777 screenshots
+  script:
+    - echo "Starting test execution..."
+    - docker run --rm
+      -e SCREENSHOT_DIR="/app/snapshot"
+      -e GOOGLE_CHAT_WEBHOOK_URL=$GOOGLE_CHAT_WEBHOOK_URL
+      -e GITLAB_BASE_URL=$GITLAB_BASE_URL
+      -v $(pwd)/screenshots:/app/snapshot
+      $CONTAINER_REGISTRY/$CI_PROJECT_NAME-$PROJECT:$IMAGE_TAG || exit_code=$?
+    - if [ ${exit_code:-0} -ne 0 ]; then
+        echo "Test failed, screenshots saved to screenshots/ directory";
+        exit 1;
+      fi
+  artifacts:
+    paths:
+      - screenshots/
+    when: on_failure
+    expire_in: 1 week
+  tags:
+    - auto-test-shell
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "schedule"

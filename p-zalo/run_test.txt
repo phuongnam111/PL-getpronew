@@ -1,0 +1,1 @@
+robot -d report -e not_run ../zalo/testcases
