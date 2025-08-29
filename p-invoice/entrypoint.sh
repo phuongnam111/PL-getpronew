@@ -1,9 +1,8 @@
 #!/bin/bash
 
-set -e  # Exit immediately if a command exits with a non-zero status.
-
+set -Eeuo pipefail
+# #clear screen shots
+# rm -f /app/screenshots/*.png || true
 echo "Running invoice..."
-python invoice-runner.py
-#find /app/invoice-fe -name '*.py' -exec python {} \;
-
+exec python -u invoice-runner.py "$@"
 echo "All tests completed."

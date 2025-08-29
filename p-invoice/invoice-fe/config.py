@@ -105,7 +105,7 @@ class ProdConfig:
     VT_MST ='0100109106-509'
     VT_ACC='0100109106-509'
     VT_PASS='2wsxCDE#'
-    VT_TEMPLATE="C24MGH - 5/2030 - C24MGH"
+    VT_TEMPLATE="C25MVT - 2/22242 - C25MVT"
     #genqr prod config
     RETAIL_PRODUCTNAME='a'
     ENTER ='Enter'

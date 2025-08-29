@@ -19,6 +19,7 @@ async def dismiss_popup_if_present(page, selector: str, timeout: int = 25000) ->
 
 async def login_to_dashboard(page):
     try:
+        #dimiss
         logger.info("Logging in with username: %s", ProdConfig.fnbnshop)
         await page.fill(UiSelectors.XP_SHOPNAME_FNB, ProdConfig.fnbnshop)
         await page.fill(UiSelectors.XP_FNB_ACC, ProdConfig.fnbname)

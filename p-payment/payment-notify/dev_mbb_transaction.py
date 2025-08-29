@@ -54,7 +54,7 @@ async def call_mbb_transaction_api(payment_req_id, access_token):
         "transactionid": str(current_timestamp),
         "transactiontime": current_timestamp,
         "referencenumber": str(current_timestamp)[-6:],
-        "amount": 5000,
+        "amount": DevConfig.MB_AMOUNT,
         "content": payment_req_id,  #paymentgenQR
         "bankaccount": str(current_timestamp),
         "transType": "automation",
@@ -125,7 +125,7 @@ async def generate_qr_process(page, max_retries=3):
                 await page.click(UiSelectors.XP_FAST_SALE)
             except Exception as e:
                 logger.warning(f"Failed to find XP_FAST_SALE on attempt {attempt + 1}: {str(e)}")
-                await snapshot(page, f"fast_sale_error_attempt_{attempt + 1}.png")
+                await snapshot(page, f"MBB - fast_sale_error_attempt_{attempt + 1}.png")
                 if attempt < max_retries - 1:
                     logger.info("Reloading page and retrying...")
                     await page.reload(wait_until="networkidle", timeout=60000)

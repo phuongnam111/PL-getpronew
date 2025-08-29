@@ -40,14 +40,18 @@ CONFIG = {
     "RETRY_DELAY": 2,
     "NOTIFICATION_DELAY": 2,  # Delay between consecutive notifications (seconds)
 }
-
 # Debug environment variable loading
 logging.debug(f"Loaded GOOGLE_CHAT_WEBHOOK_URL: {CONFIG['GOOGLE_CHAT_WEBHOOK_URL']}")
+logging.debug(f"Loaded GITLAB_BASE_URL: {CONFIG['GITLAB_BASE_URL']}")
 
-# Validate configuration
-if not CONFIG["GOOGLE_CHAT_WEBHOOK_URL"]:
-    logging.error("GOOGLE_CHAT_WEBHOOK_URL is not set in environment variables")
-    sys.exit(1)
+# Skip notification if GOOGLE_CHAT_WEBHOOK_URL is not set
+NOTIFICATIONS_ENABLED = bool(CONFIG["GOOGLE_CHAT_WEBHOOK_URL"])
+if not NOTIFICATIONS_ENABLED:
+    logging.warning("GOOGLE_CHAT_WEBHOOK_URL is not set. Notifications will be skipped.")
+
+# Warn if GITLAB_BASE_URL is not set
+if not CONFIG["GITLAB_BASE_URL"]:
+    logging.warning("GITLAB_BASE_URL is not set. GitLab links will be omitted.")
 
 @dataclass
 class TestResult:
@@ -72,6 +76,8 @@ def collect_test_files(directories: List[str]) -> List[Path]:
             if (
                 file_path.name != script_path.name
                 and CONFIG["PYCACHE"] not in file_path.parts
+                and file_path.name != "config.py"
+                and file_path.name != "__init__.py"
             ):
                 test_files.append(file_path)
     return test_files

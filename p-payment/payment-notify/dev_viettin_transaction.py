@@ -118,7 +118,7 @@ async def generate_qr_process(page, max_retries=3):
                 await page.wait_for_selector(UiSelectors.XP_FAST_SALE, state="visible", timeout=10000)
                 await page.click(UiSelectors.XP_FAST_SALE)
             except Exception as e:
-                logger.warning(f"Failed to find XP_FAST_SALE on attempt {attempt + 1}: {str(e)}")
+                logger.warning(f"VIB - Failed to find XP_FAST_SALE on attempt {attempt + 1}: {str(e)}")
                 if attempt < max_retries - 1:
                     logger.info("Reloading page and retrying...")
                     await page.reload(wait_until="networkidle", timeout=60000)
@@ -191,7 +191,7 @@ async def generate_qr_process(page, max_retries=3):
                 for bank_attempt in range(max_bank_retries):
                     try:
                         await page.locator("#bankAccounts").get_by_text("select").click(delay=100)
-                        await page.wait_for_selector(f"text={DevConfig.BIDV}", state="visible", timeout=2000)
+                        await page.wait_for_selector(f"text={DevConfig.ICB}", state="visible", timeout=2000)
                         break
                     except:
                         if bank_attempt == max_bank_retries - 1:

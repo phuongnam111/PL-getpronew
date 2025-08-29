@@ -53,7 +53,7 @@ async def call_bidv_paybill_api(bill_id):
         trans_date = datetime.now().strftime("%Y%m%d%H%M%S")
         customer_id = DevConfig.customer_id
         service_id = DevConfig.servcice_id
-        amount = 5000
+        amount = DevConfig.BIDV_AMOUNT
 
         # Prepare request
         payload = {
@@ -113,8 +113,8 @@ async def generate_qr_process(page, max_retries=3):
                 await page.wait_for_selector(UiSelectors.XP_FAST_SALE, state="visible", timeout=10000)
                 await page.click(UiSelectors.XP_FAST_SALE)
             except Exception as e:
-                logger.warning(f"Failed to find XP_FAST_SALE on attempt {attempt + 1}: {str(e)}")
-                await snapshot(page, f"fast_sale_error_attempt_{attempt + 1}.png")
+                logger.warning(f"BIDV -Failed to find XP_FAST_SALE on attempt {attempt + 1}: {str(e)}")
+                await snapshot(page, f"BIDV fast_sale_error_attempt_{attempt + 1}.png")
                 if attempt < max_retries - 1:
                     logger.info("Reloading page and retrying...")
                     await page.reload(wait_until="networkidle", timeout=60000)
@@ -262,7 +262,7 @@ async def verify_payment_success(page):
             state="visible",
             timeout=DEFAULT_TIMEOUT
         )
-        logger.info("Payment verification successful.")
+        logger.info("Payment verify successful.")
         return True
     except Exception as e:
         logger.error(f"Payment verification failed: {e}")

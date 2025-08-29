@@ -1,10 +1,9 @@
 #!/bin/bash
 
-set -e  # Exit immediately if a command exits with a non-zero status.
+set -Eeuo pipefail
 # #clear screen shots
 # rm -f /app/screenshots/*.png || true
 echo "Running lending..."
-python lending-runner.py
-#find /app/lending-fe -name '*.py' -exec python {} \;;
-
+exec python -u lending-runner.py "$@"
 echo "All tests completed."
+#find /app/lending-fe -name '*.py' -exec python {} \;;

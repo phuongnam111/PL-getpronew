@@ -1,9 +1,9 @@
 #!/bin/bash
 
-set -e  # Exit immediately if a command exits with a non-zero status.
-
-echo "Running payment...."
-python payment-runner.py
-#find /app/payment-fe -name '*.py' -exec python {} \;;
-
+set -Eeuo pipefail
+# #clear screen shots
+# rm -f /app/screenshots/*.png || true
+echo "Running payment..."
+exec python -u payment-runner.py "$@"
 echo "All tests completed."
+#find /app/lending-fe -name '*.py' -exec python {} \;;

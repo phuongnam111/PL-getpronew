@@ -1,15 +1,16 @@
 import requests
 import json
-from config import ProdConfig, Paramconfig
 import logging
-from dotenv import set_key, load_dotenv
 import os
-
+from dotenv import set_key, load_dotenv
+from config import ProdConfig, Paramconfig
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
+
 def generate_qr_code():
+    """Generate QR code via API call"""
     url = ProdConfig.generate_qr_url
     headers = {
         'Authorization': Paramconfig.authorization.strip(),
@@ -26,54 +27,56 @@ def generate_qr_code():
         "content": Paramconfig.content
     }
 
-    # Log request
-    logger.info(f"Sending request to {url}")
-    logger.info(f"Request headers: {headers}")
-    logger.info(f"Request body: {data}")
-
     try:
-        response = requests.post(url, headers=headers, data=json.dumps(data))
-        response.raise_for_status()  # Raises HTTPError for bad responses
-    except requests.exceptions.RequestException as e:
-        logger.error(f"Failed to generate QR Code: {e}")
+        response = requests.post(url, headers=headers, json=data, timeout=30)
+        response.raise_for_status()
+        return response.json()
+    except Exception as e:
+        logger.error(f"Failed to generate QR code: {e}")
         return None
 
-    if response.status_code == 200:
-        try:
-            response_data = response.json()
-            logger.info(f"Response data: {response_data}")
-            return response_data
-        except ValueError:
-            logger.error(f"Failed to parse JSON response: {response.text}")
-            return None
+
+def save_to_env(response_data):
+    """Save response data to .env file"""
+    try:
+        # env be
+        env_file_path = os.path.join(os.path.dirname(__file__), '.env')
+        
+        body = response_data.get('body', {})
+        env_vars = {
+            "IMAGE": body.get('image', ''),
+            "TRANSACTION_ID": str(body.get('transaction_id', '')),
+            "QR_STRING": body.get('qr_string', ''),
+            "KOV_CODE": body.get('kov_code', ''),
+            "PAYMENT_REQ_ID": body.get('payment_req_id', '')
+        }
+        
+        for key, value in env_vars.items():
+            set_key(env_file_path, key, value)
+        
+        logger.info(f"Saved to {env_file_path}")
+        return True
+    except Exception as e:
+        logger.error(f"Failed to save to .env: {e}")
+        return False
+
+
+def print_results():
+    """Print environment variables"""
+    env_file_path = os.path.join(os.path.dirname(__file__), '.env')
+    load_dotenv(env_file_path)
+    vars_to_print = ['IMAGE', 'TRANSACTION_ID', 'QR_STRING', 'KOV_CODE', 'PAYMENT_REQ_ID']
+    
+    for var in vars_to_print:
+        print(f"{var}: {os.getenv(var, 'Not set')}")
+
+
+if __name__ == "__main__":
+    # Generate QR code
+    response = generate_qr_code()
+    
+    if response and save_to_env(response):
+        print_results()
+        logger.info("QR code generated successfully")
     else:
-        logger.error(f"Failed to generate QR Code with status: {response.status_code}")
-        logger.error(f"Response body: {response.text}")
-        return None
-
-def gen_qr(response_data):
-    env_file = load_dotenv('.env')
-    body = response_data.get('body', {})
-
-    # save to. evn
-    set_key(env_file, "IMAGE", body.get('image', ''))
-    set_key(env_file, "TRANSACTION_ID", str(body.get('transaction_id', '')))
-    set_key(env_file, "QR_STRING", body.get('qr_string', ''))
-    set_key(env_file, "KOV_CODE", body.get('kov_code', ''))
-    set_key(env_file, "PAYMENT_REQ_ID", body.get('payment_req_id', ''))
-
-response_data = generate_qr_code()
-    #created .dot evn file 
-if response_data: 
-    env_path = os.path.join(os.getcwd(), 'payment-be', '.env') 
-    load_dotenv(env_path)
-
-    print(f"IMAGE: {os.getenv('IMAGE')}")
-    print(f"TRANSACTION_ID: {os.getenv('TRANSACTION_ID')}")
-    print(f"QR_STRING: {os.getenv('QR_STRING')}")
-    print(f"KOV_CODE: {os.getenv('KOV_CODE')}")
-    print(f"PAYMENT_REQ_ID: {os.getenv('PAYMENT_REQ_ID')}")
-
-    logger.info("QR code generated successfully")
-else:
-    logger.error("Failed to generate QR code")
+        logger.error("Failed to generate QR code")

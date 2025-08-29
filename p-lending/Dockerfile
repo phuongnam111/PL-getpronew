@@ -1,38 +1,21 @@
-FROM python:3.10-slim
+FROM mcr.microsoft.com/playwright/python:v1.51.0
 
 WORKDIR /app
 
-RUN apt-get update && apt-get install -y --no-install-recommends \
-    tzdata \
-    wget \
-    libnss3 \
-    libnspr4 \
-    libatk1.0-0 \
-    libatk-bridge2.0-0 \
-    libcups2 \
-    libdrm2 \
-    libxkbcommon0 \
-    libxcomposite1 \
-    libxdamage1 \
-    libxfixes3 \
-    libxrandr2 \
-    libgbm1 \
-    libasound2 \
-    && ln -fs /usr/share/zoneinfo/Asia/Ho_Chi_Minh /etc/localtime \
-    && dpkg-reconfigure -f noninteractive tzdata \
-    && apt-get clean \
-    && rm -rf /var/lib/apt/lists/*
+ENV TZ=Asia/Ho_Chi_Minh
+RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
 RUN mkdir -p /app/snapshot
 
 COPY requirements.txt /app/
-RUN pip install --upgrade pip --no-cache-dir \
-    && pip install --no-cache-dir -r requirements.txt \
-    && playwright install --with-deps \
-    && playwright install-deps
+RUN pip install --upgrade pip --no-cache-dir --root-user-action=ignore \
+    && pip install --no-cache-dir -r requirements.txt --root-user-action=ignore
+
+RUN playwright install --with-deps \
+    && rm -rf /root/.cache
 
 COPY . /app/
-COPY entrypoint.sh /app/entrypoint.sh
+
 RUN chmod +x /app/entrypoint.sh
 
 ENTRYPOINT ["/app/entrypoint.sh"]

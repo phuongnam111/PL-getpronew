@@ -1,42 +1,33 @@
-# Git-related files
-.git
-.gitignore
-
-# Python cache and compiled files
-__pycache__
+.git/
+.idea/
+.vscode/
+__pycache__/
 *.pyc
 *.pyo
 *.pyd
 
-# Environment files (security-sensitive)
 .env
+*.secret
+config.local.*
 
-# Local development files
-*.md
+logs/
 *.log
-*.bak
+*.tmp
 *.swp
 
-# Test artifacts and temporary directories
-screenshots/
-snapshot/
-tests/__pycache__/
+/tmp/
+/snapshots/
 
-# Docker and CI/CD files
-Dockerfile
-.dockerignore
-.gitlab-ci.yml
-generated-config.yml
+node_modules/
+venv/
+*.egg-info/
 
-# IDE or editor files
-.vscode/
-.idea/
-*.code-workspace
+dist/
+build/
+.coverage
+*.xml
+*.html
 
-# Temporary files
-*.tmp
-*.temp
-
-# Playwright-specific (if applicable)
-playwright/test-data/
-playwright/fixtures/
+docs/
+*.md
+LICENSE

@@ -60,6 +60,7 @@ class DevConfig:
     RETAIL_DOMAIN = 'https://linhvd1.kvpos.com/man/#/login'
     #ACCOUNT USER
     #retailshop
+    sale_amount='5000'
     retailshop ='linhvd1'
     retailname ='admin'
     retailpass ='Kiotviet123456'
@@ -69,6 +70,7 @@ class DevConfig:
     BIDV_NOTI_URL="https://payment-private-dev.kiotfinance.vn/open-api/ipn/bidv/paybill"
     BIDV_SECRET_CODE="BIDV_KIOTVIET@123"
     customer_id="3365V32"
+    BIDV_AMOUNT=50000
     servcice_id="199999"
 
      #value # ICB NOTI
@@ -79,10 +81,11 @@ class DevConfig:
     ICB_TIMESTAMP="20250108134338"
    
     #value MB NOTI
-    MBB="MB - 8712315888408KIOTVIET"
+    MBB="MB - 9341729203828KIOTVIET"
     MB_NOTI_URL="https://payment-private-dev.kiotfinance.vn/open-api/ipn/mbb/api/transaction-sync"
     MB_NOTI_GET_TOKEN="https://payment-private-dev.kiotfinance.vn/open-api/ipn/mbb/api/token_generate"
     MB_AUTORIZED="Basic bWJiYW5rOjRHMzdAUTVPcTUmZg=="
+    MB_AMOUNT=50000
 
     #value VIB NOTI
     VIB_SIGN_DATA="https://dev-kms.citigo.net/tools/sign/VIB"
@@ -90,17 +93,28 @@ class DevConfig:
     VIB_TOKEN_AUTORIZED="Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjM2MDAwMDAwMDAwMDAsImlkIjoiMSIsIm5hbWUiOiJ2aWIiLCJyb2xlIjoidXNlciJ9.X9POpcWhXpFp4nSYlMtORPik7hYRAbVTLzA7jlGp2aE"
     VIB="VIB - 000009KMS"
     VIB_ACCOUNT_NUMBER='000009'
-    VIB_PRODUCT_AMOUNT=5000
+    VIB_PRODUCT_AMOUNT=50000
 
     #value VCB NOTI
     VCB="vietcombank - 0000000011121123"
     VCB_ENCRYPT_API_URL = "https://dev-kms.citigo.net/tools/aes/ctr/encrypt"
     VCB_ADVICE_EVENT_POSTING_URL = "https://payment-private-dev.kiotfinance.vn/open-api/ipn/vcb/api/v1/PartnerApi/AdviceEventPosting"
     VCB_TOKEN_STRING = "C534BD63CBAA1DFF702E4638436A138F-7319"
-    VCB_TRANS_AMOUNT = 11
+    VCB_TRANS_AMOUNT = 50000
     VCB_TRANS_REMARK = "84561"
     VCB_TRANS_TELLER = 10293721
     VCB_SIGNATURE = "signature by automation"
+
+    #value VPB NOTI
+    VPB_X_request="123"
+    VPB="VPBank - 421371172Nguyen Van Hung Anh"
+    VPB_ENCRYPT_API_URL = "https://dev-kms.citigo.net/tools/vp/noti/encrypt"
+    VPB_NOTIFY_URL = "https://payment-private-dev.kiotfinance.vn/open-api/ipn/vpb/api/notification"
+    VPB_linkId='11000011'
+    VPB_amount='60000'
+    VPB_transactionId='00019999'
+    VPB_transactionDate='2025-02-12 03:03:03'
+    VPB_AUTHORIZED="Basic dnBiYW5rOnRBNExnVlE5d2UzOFpiS0RSeE4xWXE2cEM1bVg="
 
     #value momo- noti
     MOMO='MoMo - 123456'
@@ -116,6 +130,7 @@ class DevConfig:
     MOMO_SIGNATURE='5ed6e57a25e6aa86f556ec5c3a468cdda5cb01f3f1ce2f215c68659a2da62b6b'
     MOMO_ACCES_KEY= 'uPGTYOQEnecosVHC'
     MOMO_SECRET_KEY= 'CE9fIKTaF2InO2Gh70Qvm33JnHJ0c1CG'
+    
 
     # UI Selectors
 class Dev_UiSelectors:
@@ -252,6 +267,7 @@ class UiSelectors:
     # Einvoice Environment Selectors  
     # QR Generation Environment
     #retail
+    RETAIL_BTN_AMOUNT="//input[@id='payingAmtInvoice']"
     RETAIL_SALE ="//input[@id='loginNewSaleOld']"
     BTN_SKIP_INTRO = '//a[@class="introjs-skipbutton"]'
     BTN_SALE_FAST = "//span[contains(text(),'Bán nhanh')]"
